@@ -16,7 +16,9 @@ _RESIDUAL_THRESHOLD = 30
 #Test1nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
 imgfile1 = 'df-ms-data/1/df-googleearth-1k-20091227.jpg'
 imgfile2 = 'df-ms-data/1/df-googleearth-1k-20181029.jpg'
-imgfile1 = 'df-ms-data/1/df-uav-sar-500.jpg'
+imgfile1 = '/media/bd1/Mamography/pts/0000D8E2_CC_R_preI.jpg'
+imgfile2 = '/media/bd1/Mamography/pts/0000D8E2_CC_R_postI.jpg'
+#imgfile1 = 'df-ms-data/1/df-uav-sar-500.jpg'
 
 
 start = time.perf_counter()
@@ -59,12 +61,16 @@ for m, n in matches:
     #自适应阈值
     if n.distance > m.distance + disdif_avg:
         goodMatch.append(m)
+        #print(n.distance," is ndistance")
+        #print(m.distance," is mdistance")
+        #print(disdif_avg," is disdif_avg")
         p2 = cv2.KeyPoint(kps_right[m.trainIdx][0],  kps_right[m.trainIdx][1],  1)
         p1 = cv2.KeyPoint(kps_left[m.queryIdx][0], kps_left[m.queryIdx][1], 1)
         locations_1_to_use.append([p1.pt[0], p1.pt[1]])
         locations_2_to_use.append([p2.pt[0], p2.pt[1]])
 #goodMatch = sorted(goodMatch, key=lambda x: x.distance)
 print('match num is %d' % len(goodMatch))
+
 locations_1_to_use = np.array(locations_1_to_use)
 locations_2_to_use = np.array(locations_2_to_use)
 
@@ -76,10 +82,15 @@ _, inliers = measure.ransac((locations_1_to_use, locations_2_to_use),
                           max_trials=1000)
 
 print('Found %d inliers' % sum(inliers))
-
+#print(inliers)
 inlier_idxs = np.nonzero(inliers)[0]
 #最终匹配结果
 matches = np.column_stack((inlier_idxs, inlier_idxs))
+#print('locations_1_to_use x:',locations_1_to_use[inlier_idxs])
+np.savetxt(imgfile1+'locations_1_to_use.csv',locations_1_to_use[inlier_idxs],delimiter=',')
+#print('locations_2_to_use x:',locations_1_to_use[inlier_idxs],locations_2_to_use[inlier_idxs])
+np.savetxt(imgfile2+'locations_2_to_use.csv',locations_2_to_use[inlier_idxs],delimiter=',')
+
 print('whole time is %6.3f' % (time.perf_counter() - start0))
 
 # Visualize correspondences, and save to file.

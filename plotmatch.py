@@ -107,6 +107,7 @@ def plot_matches(ax, image1, image2, keypoints1, keypoints2, matches,
             else:
                 color = matches_color
 
+
             ax.plot((keypoints1[idx1, 0], keypoints2[idx2, 0] + offset[1]),
                     (keypoints1[idx1, 1], keypoints2[idx2, 1] + offset[0]),
                     '-', color=color, linewidth=matchlinewidth, marker='+', markersize=8)

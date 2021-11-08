@@ -11,7 +11,7 @@ use_cuda = torch.cuda.is_available()
 
 # Creating CNN model
 model = D2Net(
-    model_file="models/d2_tf.pth",
+    model_file="models/d2_ots.pth",#"models/d2_tf_no_phototourism.pth",#"models/d2_tf.pth",
     use_relu=True,
     use_cuda=use_cuda
 )
